@@ -1,0 +1,144 @@
+@{
+    var temaKoyu = ViewData["Tema"]?.ToString() == "Koyu";
+}
+<!DOCTYPE html>
+<html lang="tr" data-theme="@(temaKoyu ? "dark" : "light")" data-bs-theme="@(temaKoyu ? "dark" : "light")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Yönetim Paneli</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/app-theme.css" asp-append-version="true" />
+</head>
+<body class="app-body">
+    @{
+        var aktifKontrolcu = ViewContext.RouteData.Values["controller"]?.ToString();
+        var aktifEylem = ViewContext.RouteData.Values["action"]?.ToString();
+        string Aktif(string kontrolcu, string eylem = null) =>
+            aktifKontrolcu == kontrolcu && (eylem == null || aktifEylem == eylem) ? " active" : "";
+    }
+
+    <div class="app-shell d-flex">
+        <aside class="app-sidebar d-flex flex-column">
+            <div class="app-brand">
+                <img src="~/img/gop-logo.png" alt="Tokat Gaziosmanpaşa Üniversitesi Logosu" style="width: 44px; height: 44px; object-fit: contain; background: #fff; border-radius: 50%; padding: 3px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);" />
+                <div>
+                    <div class="app-brand-title">IT Demirbaş</div>
+                    <div class="app-brand-sub">Zimmet Yönetimi</div>
+                </div>
+            </div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="app-user">
+                    <div class="app-user-avatar">@(User.Identity.Name?.Substring(0, 1).ToUpperInvariant())</div>
+                    <div class="app-user-info">
+                        <div class="app-user-label">Hoş geldiniz</div>
+                        <div class="app-user-name">@User.Identity.Name</div>
+                    </div>
+                </div>
+            }
+
+            <nav class="app-nav flex-column flex-grow-1">
+                <a class="app-nav-link@(Aktif("Home", "Index"))" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="app-nav-icon bg-info">📊</span> Dashboard
+                </a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="app-nav-section">Envanter Yönetimi</div>
+                    <a class="app-nav-link@(Aktif("Demirbas", "Create"))" asp-area="" asp-controller="Demirbas" asp-action="Create">
+                        <span class="app-nav-icon bg-primary">➕</span> Cihaz Ekleme
+                    </a>
+                    <a class="app-nav-link@(Aktif("Demirbas", "Index"))" asp-area="" asp-controller="Demirbas" asp-action="Index">
+                        <span class="app-nav-icon bg-info">💻</span> Cihaz Listesi
+                    </a>
+                    <a class="app-nav-link@(Aktif("Zimmet"))" asp-area="" asp-controller="Zimmet" asp-action="Index">
+                        <span class="app-nav-icon bg-warning">📝</span> Zimmet İşlemleri
+                    </a>
+                    <a class="app-nav-link@(Aktif("Kullanici"))" asp-area="" asp-controller="Kullanici" asp-action="Index">
+                        <span class="app-nav-icon bg-purple">👥</span> Kullanıcı Yönetimi
+                    </a>
+                    <a class="app-nav-link@(Aktif("Talep", "YoneticiTalepleri"))" asp-area="" asp-controller="Talep" asp-action="YoneticiTalepleri">
+                        <span class="app-nav-icon bg-danger">📥</span> Gelen Talepler
+                    </a>
+                    <a class="app-nav-link@(Aktif("Filtreleme"))" asp-area="" asp-controller="Filtreleme" asp-action="Index">
+                        <span class="app-nav-icon bg-success">🔎</span> Filtreleme
+                    </a>
+                }
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="app-nav-link@(Aktif("Ayarlar"))" asp-area="" asp-controller="Ayarlar" asp-action="Index">
+                        <span class="app-nav-icon bg-secondary">⚙</span> Ayarlar
+                    </a>
+                }
+
+                @if (User.IsInRole("Personel"))
+                {
+                    <div class="app-nav-section">İşlemlerim</div>
+                    <a class="app-nav-link@(Aktif("Talep", "Index"))" asp-area="" asp-controller="Talep" asp-action="Index">
+                        <span class="app-nav-icon bg-info">📩</span> Cihaz Taleplerim
+                    </a>
+                    <a class="app-nav-link@(Aktif("Zimmet", "PersonelZimmetleri"))" asp-area="" asp-controller="Zimmet" asp-action="PersonelZimmetleri">
+                        <span class="app-nav-icon bg-success">📦</span> Üzerimdeki Cihazlar
+                    </a>
+                }
+            </nav>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="app-logout">
+                    <a class="btn btn-outline-danger w-100 fw-semibold" asp-area="" asp-controller="Giris" asp-action="Cikis">🚪 Çıkış Yap</a>
+                </div>
+            }
+        </aside>
+
+        <div class="app-main flex-grow-1">
+            <header class="app-topbar">
+                <div>
+                    <div class="app-topbar-org">Yapay Zeka ve Dijital Dönüşüm Koordinatörlüğü</div>
+                    <div class="app-topbar-sub">IT Demirbaş ve Zimmet Yönetim Sistemi</div>
+                </div>
+            </header>
+
+            <main class="app-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;" id="toastKapsayici"></div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            function toastGoster(mesaj, tip) {
+                var kapsayici = document.getElementById('toastKapsayici');
+                if (!kapsayici || !mesaj) return;
+                var element = document.createElement('div');
+                element.className = 'toast align-items-center text-bg-' + tip + ' border-0';
+                element.setAttribute('role', 'alert');
+                element.innerHTML = '<div class="d-flex"><div class="toast-body"></div>' +
+                    '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Kapat"></button></div>';
+                element.querySelector('.toast-body').textContent = mesaj;
+                kapsayici.appendChild(element);
+                var toast = new bootstrap.Toast(element, { delay: 4000 });
+                element.addEventListener('hidden.bs.toast', function () { element.remove(); });
+                toast.show();
+            }
+
+            window.toastGoster = toastGoster;
+
+            var basarili = @Json.Serialize(TempData["Basarili"]?.ToString() ?? TempData["BasariliMesaj"]?.ToString() ?? TempData["Mesaj"]?.ToString());
+            var hata = @Json.Serialize(TempData["Hata"]?.ToString() ?? TempData["HataMesaji"]?.ToString());
+
+            if (basarili) toastGoster(basarili, 'success');
+            if (hata) toastGoster(hata, 'danger');
+        })();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

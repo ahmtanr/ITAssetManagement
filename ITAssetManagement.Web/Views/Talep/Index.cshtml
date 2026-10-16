@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ITAssetManagement.Core.Talep>
+
+@{
+    ViewData["Title"] = "Cihaz Taleplerim";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold" style="color: #444;">📩 Cihaz Taleplerim</h4>
+        <!-- Yeni talep formuna giden buton -->
+        <a asp-action="Create" class="btn btn-primary shadow-sm" style="background-color: #3b5998;">+ Yeni Talep Oluştur</a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted">
+                    <tr>
+                        <th class="ps-4">Tarih</th>
+                        <th>Cihaz Türü</th>
+                        <th>Gerekçe</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 text-muted">@item.TalepTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td class="fw-bold text-dark">@item.CihazTuru</td>
+                                <td class="text-muted">@item.Gerekce</td>
+                                <td>
+                                    @if(item.Durum == "Bekliyor")
+                                    {
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">⏳ Bekliyor</span>
+                                    }
+                                    else if(item.Durum == "Onaylandı")
+                                    {
+                                        <span class="badge bg-success px-3 py-2 rounded-pill">✅ Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill">❌ Reddedildi</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <h5>Henüz bir cihaz talebinde bulunmadınız.</h5>
+                                <p class="small">Yeni bir donanıma ihtiyacınız varsa yukarıdaki butonu kullanabilirsiniz.</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

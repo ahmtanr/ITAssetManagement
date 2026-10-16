@@ -1,0 +1,40 @@
+﻿@model ITAssetManagement.Core.Demirbas
+
+<div class="container mt-4">
+    <h2>Cihaz Düzenle</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <!-- ID, Barkod ve Tarih verilerinin kaybolmaması için gizli (hidden) olarak tutuyoruz -->
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Barkod" />
+                <input type="hidden" asp-for="AlimTarihi" />
+
+                <div class="mb-3">
+                    <label class="form-label">Marka</label>
+                    <input asp-for="Marka" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Model</label>
+                    <input asp-for="Model" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Seri No</label>
+                    <input asp-for="SeriNo" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kategori</label>
+                    <select asp-for="Kategori" asp-items="ViewBag.Kategoriler" class="form-select" required></select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cihaz Durumu</label>
+                    <input type="text" class="form-control" value="@Model.Durum" disabled />
+                    <div class="form-text">Durum, bakım ve arıza kayıtları üzerinden yönetilir.</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Değişiklikleri Kaydet</button>
+                <a asp-action="Index" class="btn btn-secondary">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>

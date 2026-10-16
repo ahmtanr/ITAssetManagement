@@ -1,0 +1,61 @@
+@model ITAssetManagement.Core.Kullanici
+
+@{
+    ViewData["Title"] = "Personel Düzenle";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <div class="mb-4">
+                        <h3 class="fw-bold text-dark mb-1">Personel Düzenle</h3>
+                        <p class="text-muted small mb-0">Kullanıcı bilgilerini güncelleyin. Şifre alanını boş bırakırsanız mevcut şifre korunur.</p>
+                    </div>
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+                    <form asp-action="Edit" asp-route-id="@Model.Id" method="post" autocomplete="off">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="AdSoyad" class="form-label fw-bold text-muted small"></label>
+                            <input asp-for="AdSoyad" class="form-control rounded-3" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="KullaniciAdi" class="form-label fw-bold text-muted small"></label>
+                            <input asp-for="KullaniciAdi" class="form-control rounded-3" />
+                            <span asp-validation-for="KullaniciAdi" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Rol" class="form-label fw-bold text-muted small"></label>
+                            <select asp-for="Rol" class="form-select rounded-3">
+                                <option value="Personel">Personel</option>
+                                <option value="Admin">Yönetici</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Sifre" class="form-label fw-bold text-muted small">Yeni Şifre</label>
+                            <input asp-for="Sifre" type="password" class="form-control rounded-3" placeholder="Değiştirmek istemiyorsanız boş bırakın" autocomplete="new-password" />
+                            <span asp-validation-for="Sifre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary rounded-3 fw-bold">Kaydet</button>
+                            <a asp-action="Index" class="btn btn-light rounded-3">İptal Et</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

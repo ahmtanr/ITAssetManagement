@@ -1,0 +1,9 @@
+## Derleme çıktıları
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+## Gizli ortam değişkenleri
+.env

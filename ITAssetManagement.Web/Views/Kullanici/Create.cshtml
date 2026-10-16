@@ -1,0 +1,41 @@
+﻿@model ITAssetManagement.Core.Kullanici
+
+@{
+    ViewData["Title"] = "Yeni Personel Ekle";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded-4" style="max-width: 500px; margin: auto;">
+        <div class="card-header bg-white py-3 border-0 border-bottom">
+            <h5 class="fw-bold mb-0" style="color: #3b5998;">👤 Yeni Kullanıcı Ekle</h5>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label text-muted fw-bold">Personel Adı Soyadı</label>
+                    <input asp-for="KullaniciAdi" class="form-control bg-light border-0 py-2" required placeholder="Örn: Ahmet Anar" />
+                </div>
+
+                <!-- Şifre Alanı -->
+                <div class="mb-3">
+                    <label class="form-label text-muted fw-bold">Geçici Şifre Belirle</label>
+                    <input asp-for="SifreHash" type="password" class="form-control bg-light border-0 py-2" required placeholder="Örn: 123456" />
+                </div>
+
+                <!-- Rol Seçimi -->
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-bold">Kullanıcı Yetkisi (Rol)</label>
+                    <select asp-for="Rol" class="form-select bg-light border-0 py-2">
+                        <option value="Personel">Standart Personel (Sadece kendi zimmetlerini görür)</option>
+                        <option value="Admin">Sistem Yöneticisi (Admin - Tam Yetkili)</option>
+                    </select>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary py-2 fw-bold" style="background-color: #3b5998;">Kaydet ve Sisteme Ekle</button>
+                    <a asp-action="Index" class="btn btn-light py-2 text-muted fw-bold">İptal Et</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

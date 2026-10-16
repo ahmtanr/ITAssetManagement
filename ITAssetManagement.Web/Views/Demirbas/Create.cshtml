@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Yeni Cihaz Ekle";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded-4" style="max-width: 500px; margin: auto;">
+        <div class="card-header bg-white py-3 border-0 border-bottom">
+            <h5 class="fw-bold mb-0" style="color: #3b5998;">💻 Yeni Cihaz Ekle</h5>
+        </div>
+        <div class="card-body p-4">
+            @if (ViewBag.Hata != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Hata</div>
+            }
+
+            <form asp-controller="Demirbas" asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">Marka</label>
+                    <input type="text" name="Marka" class="form-control shadow-sm p-3 rounded-3" placeholder="Örn: Apple, Dell, MSI" required autocomplete="off" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">Model</label>
+                    <input type="text" name="Model" class="form-control shadow-sm p-3 rounded-3" placeholder="Örn: Macbook Pro, Katana, Latitude" required autocomplete="off" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">Kategori</label>
+                    <select name="Kategori" class="form-select shadow-sm p-3 rounded-3" asp-items="ViewBag.Kategoriler" required></select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">Seri Numarası (Seri No)</label>
+                    <input type="text" name="SeriNo" class="form-control shadow-sm p-3 rounded-3" placeholder="Cihazın orijinal seri numarasını girin" required autocomplete="off" />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary py-2 fw-bold" style="background-color: #3b5998;">Sisteme Kaydet</button>
+                    <a asp-action="Index" class="btn btn-light py-2 text-muted fw-bold">İptal Et</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

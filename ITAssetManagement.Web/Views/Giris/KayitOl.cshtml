@@ -1,0 +1,99 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - IT Yönetim Sistemi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+            body {
+                background-color: #f4f7f6;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .login-card {
+                border: none;
+                border-radius: 1.5rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                max-width: 500px;
+                width: 100%;
+            }
+
+            .form-control {
+                border-radius: 0.75rem;
+                padding: 0.85rem 1.2rem;
+                background-color: #f8f9fa;
+                border: 1px solid #e9ecef;
+            }
+
+                .form-control:focus {
+                    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+                    border-color: #667eea;
+                    background-color: #fff;
+                }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                border-radius: 0.75rem;
+                padding: 0.85rem;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card login-card p-4 p-md-5 bg-white">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-dark mb-1">Yeni Hesap Oluştur</h3>
+                        <p class="text-muted small">Sisteme kayıt olmak için bilgilerinizi girin.</p>
+                    </div>
+
+                    @if (ViewBag.Hata != null)
+                    {
+                        <div class="alert alert-danger rounded-3 small py-2">
+                            ❌ @ViewBag.Hata
+                        </div>
+                    }
+
+                    <form asp-controller="Giris" asp-action="KayitOl" method="post" autocomplete="off">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Ad Soyad</label>
+                            <input type="text" name="AdSoyad" class="form-control shadow-sm" placeholder="Adınız Soyadınız" required autocomplete="name" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Kullanıcı Adı</label>
+                            <input type="text" name="KullaniciAdi" class="form-control shadow-sm" placeholder="Benzersiz bir kullanıcı adı" required autocomplete="off" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">Şifre</label>
+                            <input type="password" name="Sifre" class="form-control shadow-sm" placeholder="Şifrenizi belirleyin" required autocomplete="new-password" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3 text-white">Kayıt Ol</button>
+
+                        <div class="text-center">
+                            <a asp-action="Index" class="text-muted small text-decoration-none">← Zaten hesabınız var mı? Giriş Yap</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

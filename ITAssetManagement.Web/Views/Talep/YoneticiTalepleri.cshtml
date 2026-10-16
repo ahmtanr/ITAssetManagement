@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ITAssetManagement.Core.Talep>
+
+@{
+    ViewData["Title"] = "Gelen Cihaz Talepleri";
+}
+
+<div class="container-fluid mt-4 px-4">
+    <!-- Üst Başlık -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">📥 Personel Cihaz Talepleri Yönetimi</h3>
+            <p class="text-muted small mb-0">Personellerden gelen cihaz taleplerini inceleyebilir ve tek tıkla onaylayarak otomatik zimmetleyebilirsiniz.</p>
+        </div>
+    </div>
+
+    <!-- Talepler Tablosu -->
+    <div class="card shadow-sm border-0 rounded-4 mb-5 bg-white">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted small text-uppercase">
+                        <tr>
+                            <th class="ps-4 py-3">Talep Tarihi</th>
+                            <th class="py-3">Talep Eden Personel</th>
+                            <th class="py-3">İstenen Cihaz Türü</th>
+                            <th class="py-3">Gerekçe</th>
+                            <th class="py-3">Durum</th>
+                            <th class="text-end pe-4 py-3">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 text-muted small">
+                                        @item.TalepTarihi.ToString("dd.MM.yyyy HH:mm")
+                                    </td>
+                                    <td class="fw-bold text-dark">
+                                        @item.KullaniciAdi
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary bg-opacity-10 text-dark px-3 py-2 rounded-pill font-monospace">@item.CihazTuru</span>
+                                    </td>
+                                    <td class="text-muted">
+                                        @(string.IsNullOrEmpty(item.Gerekce) ? "-" : item.Gerekce)
+                                    </td>
+                                    <td>
+                                        @if (item.Durum == "Bekliyor")
+                                        {
+                                            <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill fw-bold">⏳ Bekliyor</span>
+                                        }
+                                        else if (item.Durum == "Onaylandı")
+                                        {
+                                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-bold">✅ Onaylandı</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-bold">❌ Reddedildi</span>
+                                        }
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        @if (item.Durum == "Bekliyor")
+                                        {
+                                            <!-- Onayla ve Otomatik Zimmetle Butonu -->
+                                            <form asp-action="OnaylaVeZimmetle" method="post" class="d-inline">
+                                                <input type="hidden" name="talepId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success fw-bold px-3 rounded-pill shadow-sm" onclick="return confirm('Bu talebi onaylamak ve boştaki bir cihazı otomatik zimmetlemek istiyor musunuz?');">
+                                                    ✔ Onayla & Zimmetle
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small fst-italic">İşlem Yapıldı</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <h5 class="fw-bold text-secondary">Henüz bekleyen cihaz talebi bulunmuyor.</h5>
+                                    <p class="small text-muted">Personeller panel üzerinden talep oluşturdukça burada listelenecektir.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ITAssetManagement.API/ITAssetManagement.API.csproj" />
+  <Project Path="ITAssetManagement.Core/ITAssetManagement.Core.csproj" />
+  <Project Path="ITAssetManagement.Data/ITAssetManagement.Data.csproj" />
+  <Project Path="ITAssetManagement.Web/ITAssetManagement.Web.csproj" />
+</Solution>

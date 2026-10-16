@@ -1,0 +1,220 @@
+@model IEnumerable<ITAssetManagement.Core.Kullanici>
+
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+    var toplam = Model?.Count() ?? 0;
+    var aktif = Model?.Count(k => k.Onaylandi) ?? 0;
+    var bekleyen = toplam - aktif;
+}
+
+<style>
+    .kullanici-hero {
+        background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 55%, #7c3aed 100%);
+        color: #fff;
+        border-radius: 1.25rem;
+    }
+
+    .kullanici-stat {
+        border: 0;
+        border-radius: 1rem;
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+        .kullanici-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .75rem 1.5rem rgba(15, 23, 42, .08) !important;
+        }
+
+    .kullanici-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        flex-shrink: 0;
+    }
+
+    .kullanici-tablo thead th {
+        letter-spacing: .04em;
+        font-size: .75rem;
+    }
+
+    .kullanici-tablo tbody tr {
+        transition: background-color .12s ease;
+    }
+
+    .kullanici-aksiyon {
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: .8rem;
+        padding: .35rem .85rem;
+    }
+</style>
+
+<div class="container-fluid px-4 py-4">
+
+    <div class="kullanici-hero p-4 p-md-5 mb-4 shadow-sm">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge bg-white bg-opacity-25 text-white rounded-pill px-3 py-2 mb-2">Yönetim Paneli</span>
+                <h2 class="fw-bold mb-1">Kullanıcı Yönetimi</h2>
+                <p class="mb-0 opacity-75">Personel hesaplarını görüntüleyin, kayıt taleplerini onaylayın ve yeni personel ekleyin.</p>
+            </div>
+            <a asp-action="Create" class="btn btn-light fw-bold rounded-pill px-4 py-2 shadow-sm text-primary">
+                + Yeni Personel Ekle
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card kullanici-stat shadow-sm h-100 p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                        <i class="bi bi-people-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Toplam Personel</div>
+                        <div class="fs-3 fw-bold text-dark">@toplam</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kullanici-stat shadow-sm h-100 p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                        <i class="bi bi-person-check-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Aktif Hesap</div>
+                        <div class="fs-3 fw-bold text-dark">@aktif</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kullanici-stat shadow-sm h-100 p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-warning bg-opacity-10 text-warning rounded-3 d-flex align-items-center justify-content-center" style="width:52px;height:52px;">
+                        <i class="bi bi-hourglass-split fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small text-uppercase fw-semibold">Onay Bekleyen</div>
+                        <div class="fs-3 fw-bold text-dark">@bekleyen</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-header bg-white border-0 py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <h5 class="fw-bold text-dark mb-0">Personel Listesi</h5>
+            <div class="input-group input-group-sm" style="max-width:280px;">
+                <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="search" id="personelArama" class="form-control bg-light border-start-0 rounded-end-pill" placeholder="Personel ara..." />
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 kullanici-tablo">
+                <thead class="bg-light text-muted text-uppercase">
+                    <tr>
+                        <th class="ps-4 py-3">Personel</th>
+                        <th class="py-3">Rol</th>
+                        <th class="py-3">Durum</th>
+                        <th class="text-end pe-4 py-3">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var bas = string.IsNullOrWhiteSpace(item.KullaniciAdi) ? "?" : item.KullaniciAdi.Substring(0, 1).ToUpperInvariant();
+                            <tr class="personel-satir">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="kullanici-avatar shadow-sm">@bas</span>
+                                        <div>
+                                            <div class="fw-bold text-dark">@item.KullaniciAdi</div>
+                                            @if (!string.IsNullOrEmpty(item.AdSoyad) && item.AdSoyad != item.KullaniciAdi)
+                                            {
+                                                <div class="text-muted small">@item.AdSoyad</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (item.Rol == "Admin")
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2 fw-semibold">Yönetici</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3 py-2 fw-semibold">Personel</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.Onaylandi)
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-semibold">Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-2 fw-semibold">Onay Bekliyor</span>
+                                    }
+                                </td>
+
+                                <td class="text-end pe-4">
+                                    @if (!item.Onaylandi)
+                                    {
+                                        <form asp-action="Onayla" asp-route-id="@item.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-outline-success kullanici-aksiyon me-1">Onayla</button>
+                                        </form>
+                                    }
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary kullanici-aksiyon me-1">Düzenle</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger kullanici-aksiyon"
+                                       onclick="return confirm('Bu personeli silmek istediğinize emin misiniz?');">Sil</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                Henüz kayıtlı personel bulunmuyor.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var arama = document.getElementById('personelArama');
+            if (!arama) return;
+            arama.addEventListener('input', function () {
+                var deger = this.value.toLowerCase().trim();
+                document.querySelectorAll('.personel-satir').forEach(function (satir) {
+                    satir.style.display = satir.textContent.toLowerCase().indexOf(deger) > -1 ? '' : 'none';
+                });
+            });
+        })();
+    </script>
+}

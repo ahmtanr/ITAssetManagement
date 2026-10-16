@@ -1,0 +1,208 @@
+﻿@model ITAssetManagement.Web.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa / Dashboard";
+}
+
+<div class="container-fluid mt-2 px-3">
+    <!-- Üst Karşılama Alanı -->
+    <div class="card mb-4">
+        <div class="card-body p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h2 class="page-title mb-2">Hoş Geldiniz, <span class="text-primary">@User.Identity.Name</span></h2>
+                <p class="text-muted mb-0">IT Demirbaş ve Zimmet Yönetim Sistemi özet paneli</p>
+            </div>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fw-medium">
+                @DateTime.Now.ToString("dd MMMM yyyy, dddd")
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-xl col-md-6">
+            <div class="card stat-card" style="--stat-color: #1d4ed8;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label mb-2">Toplam Cihaz</div>
+                        <div class="stat-value">@Model.ToplamCihaz</div>
+                        <div class="text-muted small mt-2">Sistemdeki kayıtlı tüm cihazlar</div>
+                    </div>
+                    <div class="stat-icon">💻</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl col-md-6">
+            <div class="card stat-card" style="--stat-color: #0ea5e9;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label mb-2">Zimmetli Cihaz</div>
+                        <div class="stat-value">@Model.ZimmetliCihaz</div>
+                        <div class="text-muted small mt-2">Personelde kullanımda olan cihazlar</div>
+                    </div>
+                    <div class="stat-icon">📦</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl col-md-6">
+            <div class="card stat-card" style="--stat-color: #8b5cf6;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label mb-2">Bakımdaki Cihaz</div>
+                        <div class="stat-value">@Model.BakimdakiCihaz</div>
+                        <div class="text-muted small mt-2">Servis / bakım sürecindeki cihazlar</div>
+                    </div>
+                    <div class="stat-icon">🛠️</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl col-md-6">
+            <div class="card stat-card" style="--stat-color: #ef4444;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label mb-2">Arızalı Cihaz</div>
+                        <div class="stat-value">@Model.ArizaliCihaz</div>
+                        <div class="text-muted small mt-2">Onarım bekleyen cihazlar</div>
+                    </div>
+                    <div class="stat-icon">⚠️</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl col-md-6">
+            <div class="card stat-card" style="--stat-color: #f59e0b;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label mb-2">Bekleyen Talepler</div>
+                        <div class="stat-value">@Model.BekleyenTalep</div>
+                        <div class="text-muted small mt-2"><span class="text-success fw-semibold">Sistem aktif</span> ve çalışıyor</div>
+                    </div>
+                    <div class="stat-icon">⚡</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-xl-5">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold mb-4">Cihaz Kategori Dağılımı</h5>
+                    <div class="d-flex flex-column flex-sm-row align-items-center gap-4">
+                        <div style="width: 180px; height: 180px; border-radius: 50%; background: conic-gradient(@Model.GrafikGradient); position: relative; flex-shrink: 0;">
+                            <div class="bg-white rounded-circle d-flex flex-column align-items-center justify-content-center" style="position: absolute; inset: 30px;">
+                                <div class="fw-bold fs-4">@Model.ToplamCihaz</div>
+                                <div class="text-muted small">Toplam</div>
+                            </div>
+                        </div>
+                        <ul class="list-unstyled w-100 mb-0">
+                            @foreach (var durum in Model.KategoriDagilimi)
+                            {
+                                <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                    <span class="d-flex align-items-center gap-2">
+                                        <span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: @durum.Renk;"></span>
+                                        @durum.Durum
+                                    </span>
+                                    <span class="fw-semibold">@durum.Adet <span class="text-muted small fw-normal">(%@durum.Yuzde)</span></span>
+                                </li>
+                            }
+                            @if (!Model.KategoriDagilimi.Any())
+                            {
+                                <li class="text-muted small">Henüz cihaz kaydı yok.</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-7">
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold mb-4">Son İşlemler</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>İşlem</th>
+                                    <th>Cihaz</th>
+                                    <th>Personel</th>
+                                    <th>Tarih</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var islem in Model.SonZimmetler)
+                                {
+                                    var iade = islem.TeslimTarihi.HasValue;
+                                    <tr>
+                                        <td>
+                                            <span class="badge @(iade ? "bg-success-subtle text-success" : "bg-primary-subtle text-primary")">
+                                                @(iade ? "İade" : "Zimmet")
+                                            </span>
+                                        </td>
+                                        <td>@islem.Demirbas?.Marka @islem.Demirbas?.Model</td>
+                                        <td>@(islem.Kullanici?.AdSoyad ?? islem.Kullanici?.KullaniciAdi)</td>
+                                        <td>@((iade ? islem.TeslimTarihi!.Value : islem.VerilisTarihi).ToString("dd.MM.yyyy HH:mm"))</td>
+                                    </tr>
+                                }
+                                @foreach (var bakim in Model.SonBakimlar)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-warning-subtle text-warning">Bakım</span>
+                                        </td>
+                                        <td>@bakim.Demirbas?.Marka @bakim.Demirbas?.Model</td>
+                                        <td class="text-muted">@bakim.Aciklama</td>
+                                        <td>@bakim.BaslangicTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                                    </tr>
+                                }
+                                @if (!Model.SonZimmetler.Any() && !Model.SonBakimlar.Any())
+                                {
+                                    <tr><td colspan="4" class="text-muted text-center">Henüz işlem yok.</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body p-4">
+            <h5 class="fw-semibold mb-4">Son Eklenen Cihazlar</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Marka</th>
+                            <th>Model</th>
+                            <th>Seri No</th>
+                            <th>Durum</th>
+                            <th>Alım Tarihi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cihaz in Model.SonEklenenCihazlar)
+                        {
+                            <tr>
+                                <td>@cihaz.Id</td>
+                                <td>@cihaz.Marka</td>
+                                <td>@cihaz.Model</td>
+                                <td>@cihaz.SeriNo</td>
+                                <td><span class="badge bg-secondary-subtle text-secondary">@(cihaz.Durum ?? "Tanımsız")</span></td>
+                                <td>@cihaz.AlimTarihi.ToString("dd.MM.yyyy")</td>
+                            </tr>
+                        }
+                        @if (!Model.SonEklenenCihazlar.Any())
+                        {
+                            <tr><td colspan="6" class="text-muted text-center">Henüz cihaz kaydı yok.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

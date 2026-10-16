@@ -1,0 +1,40 @@
+﻿@model ITAssetManagement.Core.Zimmet
+
+<div class="container mt-4">
+    <h2>Yeni Zimmet (Atama) Ekle</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cihaz Seçin</label>
+                    <select asp-for="DemirbasId" class="form-select" required>
+                        <option value="">-- Listeden Cihaz Seç --</option>
+                        @foreach(var cihaz in ViewBag.Cihazlar)
+                        {
+                            <option value="@cihaz.Id">@cihaz.Marka @cihaz.Model (@cihaz.SeriNo)</option>
+                        }
+                    </select>
+                    <span asp-validation-for="DemirbasId" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Personel (Kullanıcı) Seçin</label>
+                    <select asp-for="KullaniciId" class="form-select" required>
+                        <option value="">-- Listeden Personel Seç --</option>
+                        @foreach(var kul in ViewBag.Kullanicilar)
+                        {
+                            <option value="@kul.Id">@kul.KullaniciAdi</option>
+                        }
+                    </select>
+                    <span asp-validation-for="KullaniciId" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success">Cihazı Zimmetle</button>
+                <a asp-action="Index" class="btn btn-secondary">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>

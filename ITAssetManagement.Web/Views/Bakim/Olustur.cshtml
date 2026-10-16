@@ -1,0 +1,43 @@
+@model ITAssetManagement.Core.Bakim
+
+@{
+    ViewData["Title"] = "Yeni Bakım Kaydı";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold mb-3">Yeni Bakım / Arıza Kaydı</h3>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Olustur" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cihaz</label>
+                    <select asp-for="DemirbasId" asp-items="ViewBag.Demirbaslar" class="form-select" required>
+                        <option value="">Cihaz seçin</option>
+                    </select>
+                    <span asp-validation-for="DemirbasId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Kayıt Türü</label>
+                    <select name="durum" asp-items="ViewBag.Durumlar" class="form-select" required></select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Aciklama" class="form-label">Açıklama</label>
+                    <textarea asp-for="Aciklama" class="form-control" rows="3" required></textarea>
+                    <span asp-validation-for="Aciklama" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+                <a asp-action="Index" class="btn btn-secondary">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

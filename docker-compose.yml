@@ -1,0 +1,46 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD:?SA_PASSWORD .env dosyasında tanımlanmalıdır}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: ITAssetManagement.API/Dockerfile
+    ports:
+      - "7041:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ITAssetDB;User Id=sa;Password=${SA_PASSWORD:?SA_PASSWORD .env dosyasında tanımlanmalıdır};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY:?JWT_KEY .env dosyasında tanımlanmalıdır}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: ITAssetManagement.Web/Dockerfile
+    ports:
+      - "7187:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ApiBaseUrl=http://api:80/api/
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ITAssetDB;User Id=sa;Password=${SA_PASSWORD:?SA_PASSWORD .env dosyasında tanımlanmalıdır};TrustServerCertificate=True;MultipleActiveResultSets=true
+    depends_on:
+      - api
+      - sqlserver
+
+volumes:
+  sqlserverdata:

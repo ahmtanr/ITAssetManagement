@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Ayarlar";
+    var tema = ViewBag.Tema as string ?? "Acik";
+    var kullanici = ViewBag.Kullanici as ITAssetManagement.Core.Kullanici;
+}
+
+<div class="container mt-4" style="max-width: 900px;">
+    <h3 class="fw-bold mb-3">Ayarlar</h3>
+    <hr />
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Profil Bilgileri</h5>
+            <form asp-action="ProfilGuncelle" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label">Ad Soyad</label>
+                    <input type="text" name="adSoyad" class="form-control" value="@kullanici?.AdSoyad" maxlength="100" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kullanıcı Adı</label>
+                    <input type="text" name="kullaniciAdi" class="form-control" value="@kullanici?.KullaniciAdi" required maxlength="50" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Rol</label>
+                    <input type="text" class="form-control" value="@kullanici?.Rol" disabled />
+                </div>
+                <button type="submit" class="btn btn-primary fw-bold">Profili Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Şifre Değiştir</h5>
+            <form asp-action="SifreDegistir" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label">Mevcut Şifre</label>
+                    <input type="password" name="mevcutSifre" class="form-control" required autocomplete="current-password" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Yeni Şifre</label>
+                    <input type="password" name="yeniSifre" class="form-control" required minlength="6" autocomplete="new-password" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Yeni Şifre (Tekrar)</label>
+                    <input type="password" name="yeniSifreTekrar" class="form-control" required minlength="6" autocomplete="new-password" />
+                </div>
+                <button type="submit" class="btn btn-primary fw-bold">Şifreyi Değiştir</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Tema</h5>
+            <form asp-action="TemaKaydet" method="post" class="d-flex align-items-center gap-3">
+                @Html.AntiForgeryToken()
+                <select name="tema" class="form-select w-auto">
+                    <option value="Acik" selected="@(tema == "Acik")">Açık</option>
+                    <option value="Koyu" selected="@(tema == "Koyu")">Koyu</option>
+                </select>
+                <button type="submit" class="btn btn-primary fw-bold">Temayı Uygula</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Sistem Bilgisi</h5>
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Uygulama Sürümü</dt>
+                <dd class="col-sm-9">@ViewBag.Surum</dd>
+
+                <dt class="col-sm-3">Veritabanı Sunucusu</dt>
+                <dd class="col-sm-9">@ViewBag.VeritabaniSunucu</dd>
+
+                <dt class="col-sm-3">Veritabanı Adı</dt>
+                <dd class="col-sm-9">@ViewBag.VeritabaniAdi</dd>
+            </dl>
+        </div>
+    </div>
+</div>
