@@ -30,25 +30,43 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-// 2. Controller ve JSON Döngü Koruması (Entity Framework ilişkilerinde çöküntüyü önler)
+// 2. Controller ve JSON Döngü Koruması
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.PropertyNamingPolicy = null; // Property isimlerinin küçük harfe dönüşmesini engeller
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
-// 3. Swagger (API Test Arayüzü) Servisleri
+// 3. Swagger Servisleri
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var builderApp = builder.Build();
 
-// 4. Otomatik Migration (Veritabanı Güncelleme)
+// 4. Otomatik Migration ve Otomatik Admin (Seed) Ekleme
 using (var scope = builderApp.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<UygulamaDbContext>();
     db.Database.Migrate();
+
+    // Veritabanında hiç Admin rolüne sahip kullanıcı var mı kontrol ediyoruz
+    bool adminVarMi = db.Kullanicilar.Any(k => k.Rol == "Admin");
+
+    if (!adminVarMi)
+    {
+        var adminKullanici = new Kullanici
+        {
+            KullaniciAdi = "admin",
+            Sifre = "123456",
+            Rol = "Admin",
+            AdSoyad = "Sistem Yoneticisi",
+            Onaylandi = true
+        };
+
+        db.Kullanicilar.Add(adminKullanici);
+        db.SaveChanges();
+    }
 }
 
 // 5. Middleware Ayarları
