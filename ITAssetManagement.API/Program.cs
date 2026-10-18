@@ -52,7 +52,8 @@ using (var scope = builderApp.Services.CreateScope())
 }
 
 // 5. Middleware Ayarları
-if (builderApp.Environment.IsDevelopment())
+if (builderApp.Environment.IsDevelopment() ||
+    builderApp.Environment.IsEnvironment("Docker"))
 {
     builderApp.UseSwagger();
     builderApp.UseSwaggerUI();
