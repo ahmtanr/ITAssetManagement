@@ -61,4 +61,8 @@ Sorun giderme
 Geliştirici Notları
 - `.env` dosyasını asla commit etmeyin; gizli değerleri yalnızca yerelde tutun.
 - Görsel dosya adlarında Türkçe karakter kullanmayın; README bağlantıları dosya adıyla birebir eşleşmelidir.
-
+## 🔑 Test Kullanıcı Bilgileri (Admin)
+Proje ilk kez çalıştırıldığında (Docker veya Migration ile) veritabanı otomatik olarak oluşur ve sisteme giriş yapabilmeniz için varsayılan bir yönetici hesabı otomatik olarak tanımlanır:
+- **Kullanıcı Adı:** `admin`
+- **Şifre:** `123456`
+- **Rol:** `Admin`
